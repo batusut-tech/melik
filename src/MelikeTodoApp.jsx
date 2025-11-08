@@ -18,7 +18,7 @@ const DEFAULT_TASKS = [
     title: "Sürpriz pazar kahvaltısı planı",
     description: "Yakınındaki en sevdiği kafede rezervasyon.",
     list: "Kişisel",
-    due: new Date().toISOString().slice(0, 10),
+    due: localDateStr(),
     tags: ["Aşk"],
     subtasks: [
       { id: (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()), title: "Rezervasyon aç", done: false },
@@ -39,6 +39,14 @@ const THEME = {
   accentPink: "bg-pink-100 text-pink-700",
   chip: "bg-violet-100 text-violet-700",
 };
+
+// —— Yerel tarih yardımcıları ——
+function localDateStr(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`; // YYYY-MM-DD (yerel saat)
+}
 
 // —— LocalStorage Hook ——
 const STORAGE_KEY = "melike_todo_v1";
@@ -185,7 +193,7 @@ export default function MelikeTodoApp() {
   }
 
   // Takvim
-  const fmt = (d) => d.toISOString().slice(0,10);
+  const fmt = (d) => localDateStr(d);
   const monthStart = useMemo(() => new Date(calDate.getFullYear(), calDate.getMonth(), 1), [calDate]);
   const monthEnd = useMemo(() => new Date(calDate.getFullYear(), calDate.getMonth()+1, 0), [calDate]);
   const daysArray = useMemo(() => Array.from({length: monthEnd.getDate()}, (_,i)=> i+1), [monthEnd]);
